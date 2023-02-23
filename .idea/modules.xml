@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/dam-chat_psp_backend.iml" filepath="$PROJECT_DIR$/dam-chat_psp_backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dam2-chat_psp_backend.iml" filepath="$PROJECT_DIR$/dam2-chat_psp_backend.iml" />
     </modules>
   </component>
 </project>
