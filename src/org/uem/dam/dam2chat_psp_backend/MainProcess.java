@@ -8,17 +8,25 @@ import java.util.ArrayList;
 
 public class MainProcess {
     public static final int port = 2453;
+    private final static StringBuffer chatHistoryBuffer = new StringBuffer();
     private static ServerSocket serverSocket = null;
 
     public static void main(String[] args) {
         try {
             startServer();
-            while (true) {
-                listenClient();
-            }
+            while (true) listenClient();
         } finally {
             closeServer();
         }
+    }
+
+    public static synchronized void appendHistory(String msg) {
+        System.out.println(String.format("[Buffer] %s", msg));
+        chatHistoryBuffer.append(msg + "\n");
+    }
+
+    public static synchronized String retrieveHistory() {
+        return chatHistoryBuffer.toString();
     }
 
     private static void startServer() {
@@ -40,11 +48,9 @@ public class MainProcess {
     }
 
     private static void listenClient() {
-        Socket client;
-        DataInputStream clientStream;
         try {
             System.out.println("Yielding for connection");
-            client = serverSocket.accept();
+            Socket client = serverSocket.accept();
             System.out.println("Connection accepted, releasing a new thread for this connection");
             new ClientThreadConnection(client).start();
         } catch (IOException e) {
