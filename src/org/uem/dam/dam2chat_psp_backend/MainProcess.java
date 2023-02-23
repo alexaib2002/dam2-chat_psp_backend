@@ -1,7 +1,10 @@
+package org.uem.dam.dam2chat_psp_backend;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class MainProcess {
     public static final int port = 2453;
@@ -21,6 +24,7 @@ public class MainProcess {
     private static void startServer() {
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("Server up and running");
         } catch (IOException e) {
             System.err.println("Couldn't create socket on port 2453");
         }
@@ -28,23 +32,23 @@ public class MainProcess {
 
     private static void closeServer() {
         try {
-            serverSocket.close();
+            if (serverSocket != null && !serverSocket.isClosed())
+                serverSocket.close();
         } catch (IOException e) {
             System.err.println("I/O error while closing the server!");
         }
     }
 
     private static void listenClient() {
-        Socket client = null;
-        DataInputStream clientStream = null;
+        Socket client;
+        DataInputStream clientStream;
         try {
-            System.out.println("Yielding until connection made");
+            System.out.println("Yielding for connection");
             client = serverSocket.accept();
-            clientStream = new DataInputStream(client.getInputStream());
-            System.out.println("Reached response!");
-            System.out.println(clientStream.readUTF());
+            System.out.println("Connection accepted, releasing a new thread for this connection");
+            new ClientThreadConnection(client).start();
         } catch (IOException e) {
-            System.err.println("IO error while listening to client!");
+            System.err.println("Client got disconnected");
             e.printStackTrace();
         }
     }
