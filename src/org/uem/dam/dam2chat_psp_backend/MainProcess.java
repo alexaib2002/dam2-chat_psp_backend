@@ -31,6 +31,14 @@ public class MainProcess {
         }
     }
 
+    public static synchronized void forwardMsg(String to, String msg) {
+        for (ClientThreadConnection client : clients) {
+            if (client.getNick().equals(to)) {
+                client.writeMsgSocket(msg);
+            }
+        }
+    }
+
     public static synchronized String retrieveHistory() {
         return chatHistoryBuffer.toString();
     }
